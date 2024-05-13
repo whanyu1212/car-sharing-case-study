@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "car-sharing-case-study"
+version = "0.1.0"
+description = "a proof concept for car sharing system optimization"
+authors = ["hy"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+pandas = "^2.2.2"
+numpy = "^1.26.4"
+ipykernel = "^6.29.4"
+black = "^24.4.2"
+flake8 = "^7.0.0"
+isort = "^5.13.2"
+docformatter = "^1.7.5"
+pre-commit = "^3.7.1"
+tqdm = "^4.66.4"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
