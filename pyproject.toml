@@ -17,6 +17,7 @@ docformatter = "^1.7.5"
 pre-commit = "^3.7.1"
 tqdm = "^4.66.4"
 polars = "^0.20.25"
+pulp = "^2.8.0"
 
 
 [build-system]
