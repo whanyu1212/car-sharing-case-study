@@ -134,8 +134,16 @@ class DataSynthesizer:
                     pl.col("car_id"),
                 ]
             )
-            .with_columns(start_charge_level.alias("start_charge_level"))
-            .with_columns(end_charge_level.alias("end_charge_level"))
+            .with_columns(start_charge_level.alias("left_station_charge_level"))
+            .with_columns(end_charge_level.alias("enter_station_charge_level"))
+            .rename(
+                {
+                    "trip_start_datetime": "left_station_datetime",
+                    "trip_end_datetime": "enter_station_datetime",
+                    "start_station_id": "left_station_id",
+                    "end_station_id": "enter_station_id",
+                }
+            )
         )
 
         return df
@@ -211,8 +219,8 @@ class DataSynthesizer:
             {
                 "trip_start_datetime": [None] * self.m,
                 "trip_end_datetime": [None] * self.m,
-                "start_station_id": [None] * self.m,
-                "end_station_id": [None] * self.m,
+                "start_station_id": np.random.randint(1, 380, self.m),
+                "end_station_id": np.random.randint(1, 380, self.m),
                 "distance_travelled": [None] * self.m,
                 "car_id": [None] * self.m,
                 "customer_id": [
@@ -222,11 +230,6 @@ class DataSynthesizer:
                 "event_creation_datetime": creation_datetimes,
                 "event_expiry_datetime": expiry_datetimes,
             }
-        )
-        df = df.with_columns(
-            pl.col(col).apply(
-                lambda _: np.random.randint(1, 380), return_dtype=pl.Int64
-            )
         )
         return df
 
@@ -242,7 +245,15 @@ class DataSynthesizer:
         """
         successful_data = self.generate_successful_data(trip_data)
         unsuccessful_data = self.generate_unsuccessful_data("start_station_id")
-        return successful_data.vstack(unsuccessful_data)
+        return successful_data.vstack(unsuccessful_data).select(
+            [
+                pl.col("event_creation_datetime"),
+                pl.col("event_expiry_datetime"),
+                pl.col("start_station_id"),
+                pl.col("event_status"),
+                pl.col("customer_id"),
+            ]
+        )
 
     def generate_park_q_pop_data(self, trip_data: pl.DataFrame) -> pl.DataFrame:
         """Generate parking queue population data by concatenating successful and unsuccessful
@@ -256,7 +267,15 @@ class DataSynthesizer:
         """
         successful_data = self.generate_successful_data(trip_data, 30, 10, True)
         unsuccessful_data = self.generate_unsuccessful_data("end_station_id")
-        return successful_data.vstack(unsuccessful_data)
+        return successful_data.vstack(unsuccessful_data).select(
+            [
+                pl.col("event_creation_datetime"),
+                pl.col("event_expiry_datetime"),
+                pl.col("end_station_id"),
+                pl.col("event_status"),
+                pl.col("customer_id"),
+            ]
+        )
 
 
 # sample usage
