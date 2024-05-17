@@ -1,11 +1,10 @@
-# Car sharing Case Study
-This repository is dedicated to solving a complex optimization problem that arises in the context of car-sharing services. The problem involves determining the optimal number of charging ports to install at various stations to minimize dissatisfaction due to failed car and parking reservations.
+## Summary
+This repository is dedicated to solving a complex optimization problem that arises in the context of car-sharing services. We want to determine which stations should be prioritized if the business is looking to increase the number of charging points per station from 4 to 6 to accommodate growing demand
 
-## Data
+### Data
+Due to confidentiality restrictions, the actual dataset cannot be shared or viewed. Therefore, this project utilizes a synthetic dataset specifically designed to replicate the characteristics and behavior of the original data as closely as possible
 
-The data used in this project is synthetically generated. This means that it's not based on real-world observations but is instead created artificially, often using random processes that mimic the real-world scenarios we're interested in. Synthetic data is a powerful tool for testing and development because it allows us to create a wide variety of scenarios that might not be readily available in collected datasets.
-
-### Raw data
+### Data Schema and Entity Relationship
 ```mermaid
 erDiagram
     TRIP-HISTORY ||--|| CHARGET-STATUS : has 
@@ -45,12 +44,32 @@ erDiagram
         string event_status
     }
 ```
-### Processed data that is ready for optimization
 
+### Sample synthetic data
 
-## Optimization Problem
+<img src="./img/trip.jpg" alt="trip" width="600" height="200"> <img src="./img/charge_level.jpg" alt="charge_level" width="600" height="200">
+<img src="./img/car_qpop.jpg" alt="trip" width="500" height="200"> <img src="./img/park_qpop.jpg" alt="trip" width="500" height="200">
 
-The optimization problem we're solving is a form of resource allocation problem. We have a limited budget to install additional charging ports at various stations. The goal is to decide how many additional ports to install at each station in order to minimize the total dissatisfaction. Dissatisfaction is quantified based on the number of failed car and parking reservations, which occur when the demand exceeds the available resources.
+### Objective Function
 
-The problem is solved using linear programming, a powerful mathematical technique for optimizing a linear objective function subject to linear equality and inequality constraints. The Python library `PuLP` is used to define and solve the problem.
+Failed reservations for vehicles and parking spots directly correlate with user dissatisfaction, as each failed event can lead to frustration and potentially unsubscribing from the service. Measuring dissatisfaction through the number of failed car and parking reservation events provides a quantifiable metric to minimize. By increasing the number of charging points to fulfill unmet demands, we effectively reduce the likelihood of negative user experience. This approach not only enhances user experience and service reliability which aligns with the business objective of customer retention. 
+
+<u>The objective can be formulated as:</u>
+\[
+\text{Minimize} \quad D_{\text{total}} = \sum_{s \in S} \sum_{t \in T} \left( D_c \cdot f_c(s, t) + D_p \cdot f_p(s, t) \right)
+\]
+\[
+\text{where} \sum_{s \in S} \text{cost\_per\_port} \cdot x_s \leq \text{budget}
+\]
+
+- **S**: Set of all charging stations.
+- **T**: Set of all time periods.
+- **f<sub>c</sub>(s, t)**: Number of failed car reservations at station *s* at time *t* due to lack of charging ports.
+- **f<sub>p</sub>(s, t)**: Number of failed parking reservations at station *s* at time *t* due to lack of charging ports.
+- **D<sub>c</sub>**: Dissatisfaction cost per failed car reservation.
+- **D<sub>p</sub>**: Dissatisfaction cost per failed parking reservation.
+- **x<sub>s</sub>**: Number of additional charging ports to install at station *s*.
+- **c(s, t)**: Current capacity (number of charging ports) at station *s* at time *t*.
+
+### How should the process data look like?
 
