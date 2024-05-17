@@ -54,12 +54,18 @@ erDiagram
 
 Failed reservations for vehicles and parking spots directly correlate with user dissatisfaction, as each failed event can lead to frustration and potentially unsubscribing from the service. Measuring dissatisfaction through the number of failed car and parking reservation events provides a quantifiable metric to minimize. By increasing the number of charging points to fulfill unmet demands, we effectively reduce the likelihood of negative user experience. This approach not only enhances user experience and service reliability which aligns with the business objective of customer retention. 
 
-<u>The objective can be formulated as:</u>
+### Objective Function and Constraints
+
+The objective function to minimize total dissatisfaction can be formulated as:
+
 \[
 \text{Minimize} \quad D_{\text{total}} = \sum_{s \in S} \sum_{t \in T} \left( D_c \cdot f_c(s, t) + D_p \cdot f_p(s, t) \right)
 \]
+
+subject to the constraint:
+
 \[
-\text{where} \sum_{s \in S} \text{cost\_per\_port} \cdot x_s \leq \text{budget}
+\sum_{s \in S} \text{cost\_per\_port} \cdot x_s \leq \text{budget}
 \]
 
 - **S**: Set of all charging stations.
