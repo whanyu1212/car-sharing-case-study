@@ -45,14 +45,14 @@ erDiagram
     }
 ```
 
-### Sample synthetic data
+### Sample raw data (synthetic)
 
 <img src="./img/trip.jpg" alt="trip" width="600" height="200"> <img src="./img/charge_level.jpg" alt="charge_level" width="600" height="200">
 <img src="./img/car_qpop.jpg" alt="trip" width="500" height="200"> <img src="./img/park_qpop.jpg" alt="trip" width="500" height="200">
 
 ### Objective Function
 
-Failed reservations for vehicles and parking spots directly correlate with user dissatisfaction, as each failed event can lead to frustration and potentially unsubscribing from the service. Measuring dissatisfaction through the number of failed car and parking reservation events provides a quantifiable metric to minimize. By increasing the number of charging points to fulfill unmet demands, we effectively reduce the likelihood of negative user experience. This approach not only enhances user experience and service reliability which aligns with the business objective of customer retention. 
+Failed reservations for vehicles and parking spots **directly correlate with user dissatisfaction**, as each failed event can lead to frustration and potentially unsubscribing from the service. Measuring dissatisfaction through the number of failed car and parking reservation events provides a quantifiable metric to minimize. By increasing the number of charging points to fulfill unmet demands, we effectively reduce the likelihood of negative user experience. This approach not only enhances user experience and service reliability which aligns with the business objective of customer retention. 
 
 <u>The objective can be formulated as:</u>
 <br>
@@ -67,5 +67,21 @@ Failed reservations for vehicles and parking spots directly correlate with user 
 - **x<sub>s</sub>**: Number of additional charging ports to install at station *s*.
 - **c(s, t)**: Current capacity (number of charging ports) at station *s* at time *t*.
 
-### How should the process data look like?
+**Remark:** Assume the `dissatisfaction cost` for both car reservation and parking reservation to be the same, i.e., `1 unit each`
 
+### Sample processed data (synthetic):
+Ideally, we aim to have our daily aggregated or forecasted demand, along with the unmet demand, distributed evenly across various times of the day and different stations as follows:
+
+<img src="./img/sample_processed_data.jpg" alt="trip" width="600" height="200">
+
+### Additional considerations:
+To prevent encountering an infeasible problem where the optimizer, in this case, a minimizer, can only deliver partial solutions. I have chosen not to set any upper limits on the number of additional charging ports required at each station or on the total budget. This strategy ensures that we can always generate a solvable solution to address all unmet demands comprehensively. From there, we will rank the stations by their demand in descending order. This ranking will then guide us in prioritizing which stations to upgrade first, ensuring an efficient allocation of resources based on actual demand levels.
+
+
+### Sample final output
+
+<img src="./img/sample_solution_output.jpg" alt="trip" width="600" height="400">
+
+<br>
+
+After evaluating the demand and sorting the stations in descending order, we can strategically prioritize the installation of additional charging ports. Based on available budget and cost considerations, we will focus on adding two more charging ports to the stations with the highest demand first.
